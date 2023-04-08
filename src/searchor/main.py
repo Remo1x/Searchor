@@ -28,9 +28,10 @@ def cli():
 )
 @click.argument("engine")
 @click.argument("query")
-def search(engine, query, open, copy):
-    try:
-        url = Engine[engine].search(query, copy_url=copy, open_web=open)
+ try:
+        url = eval(
+            f"Engine.{engine}.search('{query}', copy_url={copy}, open_web={open})"
+        )
         click.echo(url)
         searchor.history.update(engine, query, url)
         if open:
@@ -39,7 +40,6 @@ def search(engine, query, open, copy):
             click.echo("link copied to clipboard")
     except AttributeError:
         print("engine not recognized")
-
 
 
 @cli.command()
